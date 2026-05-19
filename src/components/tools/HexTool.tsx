@@ -2,12 +2,21 @@
 
 import { useMemo, useState } from "react";
 import { hexToText, textToHex } from "@/lib/encode";
+import type { Dictionary } from "@/i18n/types";
 import { DualPaneTool } from "../DualPaneTool";
 import { ModeToggle } from "../ModeToggle";
 
 type Mode = "toHex" | "fromHex";
 
-export function HexTool() {
+export function HexTool({
+  labels,
+  ui,
+  errors,
+}: {
+  labels: Dictionary["common"];
+  ui: Dictionary["toolUi"]["hex"];
+  errors: Dictionary["errors"];
+}) {
   const [input, setInput] = useState("");
   const [mode, setMode] = useState<Mode>("toHex");
 
@@ -17,12 +26,13 @@ export function HexTool() {
       const out = mode === "toHex" ? textToHex(input) : hexToText(input);
       return { output: out, error: undefined };
     } catch {
-      return { output: "", error: "Invalid hex string" };
+      return { output: "", error: errors.invalidHex };
     }
-  }, [input, mode]);
+  }, [input, mode, errors.invalidHex]);
 
   return (
     <DualPaneTool
+      labels={labels}
       inputValue={input}
       onInputChange={setInput}
       output={output}
@@ -35,13 +45,13 @@ export function HexTool() {
         }
       }}
       inputPlaceholder={
-        mode === "toHex" ? "Plain text…" : "Hex bytes (e.g. 48 65 6c 6c 6f)…"
+        mode === "toHex" ? ui.placeholderText : ui.placeholderHex
       }
       extraControls={
         <ModeToggle
           modes={[
-            { id: "toHex", label: "Text → Hex" },
-            { id: "fromHex", label: "Hex → Text" },
+            { id: "toHex", label: ui.toHex },
+            { id: "fromHex", label: ui.fromHex },
           ]}
           value={mode}
           onChange={setMode}

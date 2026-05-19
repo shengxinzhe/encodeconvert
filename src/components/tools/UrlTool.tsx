@@ -2,12 +2,21 @@
 
 import { useMemo, useState } from "react";
 import { urlDecode, urlEncode } from "@/lib/encode";
+import type { Dictionary } from "@/i18n/types";
 import { DualPaneTool } from "../DualPaneTool";
 import { ModeToggle } from "../ModeToggle";
 
 type Mode = "encode" | "decode";
 
-export function UrlTool() {
+export function UrlTool({
+  labels,
+  ui,
+  errors,
+}: {
+  labels: Dictionary["common"];
+  ui: Dictionary["toolUi"]["url"];
+  errors: Dictionary["errors"];
+}) {
   const [input, setInput] = useState("");
   const [mode, setMode] = useState<Mode>("encode");
 
@@ -17,12 +26,13 @@ export function UrlTool() {
       const out = mode === "encode" ? urlEncode(input) : urlDecode(input);
       return { output: out, error: undefined };
     } catch {
-      return { output: "", error: "Invalid URL-encoded string" };
+      return { output: "", error: errors.invalidUrl };
     }
-  }, [input, mode]);
+  }, [input, mode, errors.invalidUrl]);
 
   return (
     <DualPaneTool
+      labels={labels}
       inputValue={input}
       onInputChange={setInput}
       output={output}
@@ -37,8 +47,8 @@ export function UrlTool() {
       extraControls={
         <ModeToggle
           modes={[
-            { id: "encode", label: "Encode" },
-            { id: "decode", label: "Decode" },
+            { id: "encode", label: ui.encode },
+            { id: "decode", label: ui.decode },
           ]}
           value={mode}
           onChange={setMode}

@@ -2,12 +2,19 @@
 
 import { useMemo, useState } from "react";
 import { htmlEntityDecode, htmlEntityEncode } from "@/lib/encode";
+import type { Dictionary } from "@/i18n/types";
 import { DualPaneTool } from "../DualPaneTool";
 import { ModeToggle } from "../ModeToggle";
 
 type Mode = "encode" | "decode";
 
-export function HtmlEntityTool() {
+export function HtmlEntityTool({
+  labels,
+  ui,
+}: {
+  labels: Dictionary["common"];
+  ui: Dictionary["toolUi"]["htmlEntity"];
+}) {
   const [input, setInput] = useState("");
   const [mode, setMode] = useState<Mode>("encode");
 
@@ -20,6 +27,7 @@ export function HtmlEntityTool() {
 
   return (
     <DualPaneTool
+      labels={labels}
       inputValue={input}
       onInputChange={setInput}
       output={output}
@@ -33,8 +41,8 @@ export function HtmlEntityTool() {
       extraControls={
         <ModeToggle
           modes={[
-            { id: "encode", label: "Encode" },
-            { id: "decode", label: "Decode" },
+            { id: "encode", label: ui.encode },
+            { id: "decode", label: ui.decode },
           ]}
           value={mode}
           onChange={setMode}

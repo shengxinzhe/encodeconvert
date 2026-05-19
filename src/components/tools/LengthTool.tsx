@@ -1,13 +1,11 @@
 "use client";
 
-import {
-  convertLength,
-  type LengthUnit,
-} from "@/lib/convert";
+import type { Dictionary } from "@/i18n/types";
+import { convertLength, type LengthUnit } from "@/lib/convert";
 import { UnitConverter } from "./UnitConverter";
 
 const UNITS = ["m", "cm", "mm", "inch", "ft"] as const;
-const LABELS: Record<LengthUnit, string> = {
+const UNIT_LABELS: Record<LengthUnit, string> = {
   m: "Meters (m)",
   cm: "Centimeters (cm)",
   mm: "Millimeters (mm)",
@@ -15,11 +13,12 @@ const LABELS: Record<LengthUnit, string> = {
   ft: "Feet (ft)",
 };
 
-export function LengthTool() {
+export function LengthTool({ labels }: { labels: Dictionary["common"] }) {
   return (
     <UnitConverter
+      labels={labels}
       units={UNITS}
-      labels={LABELS}
+      unitLabels={UNIT_LABELS}
       convert={convertLength}
       defaultFrom="cm"
       defaultTo="inch"

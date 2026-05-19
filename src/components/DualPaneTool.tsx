@@ -1,11 +1,13 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import type { Dictionary } from "@/i18n/types";
 import { ui } from "@/lib/ui";
 
 export function DualPaneTool({
-  inputLabel = "Input",
-  outputLabel = "Output",
+  labels,
+  inputLabel,
+  outputLabel,
   inputValue,
   onInputChange,
   output,
@@ -14,8 +16,9 @@ export function DualPaneTool({
   onSwap,
   extraControls,
   inputPlaceholder,
-  outputPlaceholder = "Result appears here...",
+  outputPlaceholder,
 }: {
+  labels: Dictionary["common"];
   inputLabel?: string;
   outputLabel?: string;
   inputValue: string;
@@ -42,7 +45,7 @@ export function DualPaneTool({
       {extraControls}
       <div className="grid gap-5 lg:grid-cols-2">
         <div>
-          <label className={ui.label}>{inputLabel}</label>
+          <label className={ui.label}>{inputLabel ?? labels.input}</label>
           <textarea
             className={`${ui.input} mt-1.5`}
             value={inputValue}
@@ -52,12 +55,12 @@ export function DualPaneTool({
           />
         </div>
         <div>
-          <label className={ui.label}>{outputLabel}</label>
+          <label className={ui.label}>{outputLabel ?? labels.output}</label>
           <textarea
             readOnly
             className={`${ui.input} mt-1.5 ${error ? "text-error" : ""}`}
             value={error ?? output}
-            placeholder={outputPlaceholder}
+            placeholder={outputPlaceholder ?? labels.result}
             rows={6}
           />
         </div>
@@ -69,16 +72,16 @@ export function DualPaneTool({
           disabled={!output || !!error}
           className={`${ui.btnPrimary} disabled:opacity-40`}
         >
-          {copied ? "Copied!" : "Copy"}
+          {copied ? labels.copied : labels.copy}
         </button>
         {onClear && (
           <button type="button" onClick={onClear} className={ui.btnSecondary}>
-            Clear
+            {labels.clear}
           </button>
         )}
         {onSwap && (
           <button type="button" onClick={onSwap} className={ui.btnSecondary}>
-            Swap
+            {labels.swap}
           </button>
         )}
       </div>

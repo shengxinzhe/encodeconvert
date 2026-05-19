@@ -6,12 +6,19 @@ import {
   fahrenheitToCelsius,
   formatNumber,
 } from "@/lib/convert";
+import type { Dictionary } from "@/i18n/types";
 import { ModeToggle } from "../ModeToggle";
 import { ui } from "@/lib/ui";
 
 type Mode = "cToF" | "fToC";
 
-export function TemperatureTool() {
+export function TemperatureTool({
+  labels,
+  ui: tui,
+}: {
+  labels: Dictionary["common"];
+  ui: Dictionary["toolUi"]["temperature"];
+}) {
   const [value, setValue] = useState("0");
   const [mode, setMode] = useState<Mode>("cToF");
 
@@ -29,15 +36,15 @@ export function TemperatureTool() {
     <div className="max-w-md space-y-5">
       <ModeToggle
         modes={[
-          { id: "cToF", label: "°C → °F" },
-          { id: "fToC", label: "°F → °C" },
+          { id: "cToF", label: tui.cToF },
+          { id: "fToC", label: tui.fToC },
         ]}
         value={mode}
         onChange={setMode}
       />
       <label>
         <span className={ui.label}>
-          {mode === "cToF" ? "Celsius" : "Fahrenheit"}
+          {mode === "cToF" ? tui.celsius : tui.fahrenheit}
         </span>
         <input
           type="number"

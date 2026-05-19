@@ -2,18 +2,21 @@
 
 import { useMemo, useState } from "react";
 import { formatNumber } from "@/lib/convert";
+import type { Dictionary } from "@/i18n/types";
 import { ui } from "@/lib/ui";
 
 export function UnitConverter<U extends string>({
-  units,
   labels,
+  units,
+  unitLabels,
   convert,
   defaultFrom,
   defaultTo,
   defaultValue = "1",
 }: {
+  labels: Dictionary["common"];
   units: readonly U[];
-  labels: Record<U, string>;
+  unitLabels: Record<U, string>;
   convert: (value: number, from: U, to: U) => number;
   defaultFrom: U;
   defaultTo: U;
@@ -33,7 +36,7 @@ export function UnitConverter<U extends string>({
     <div className="max-w-lg space-y-5">
       <div className="grid gap-3 sm:grid-cols-[1fr,auto,1fr] sm:items-end">
         <label>
-          <span className={ui.label}>From</span>
+          <span className={ui.label}>{labels.from}</span>
           <select
             value={from}
             onChange={(e) => setFrom(e.target.value as U)}
@@ -41,7 +44,7 @@ export function UnitConverter<U extends string>({
           >
             {units.map((u) => (
               <option key={u} value={u}>
-                {labels[u]}
+                {unitLabels[u]}
               </option>
             ))}
           </select>
@@ -54,12 +57,12 @@ export function UnitConverter<U extends string>({
             if (result) setValue(result);
           }}
           className={ui.btnSecondary}
-          aria-label="Swap units"
+          aria-label={labels.swap}
         >
           ⇄
         </button>
         <label>
-          <span className={ui.label}>To</span>
+          <span className={ui.label}>{labels.to}</span>
           <select
             value={to}
             onChange={(e) => setTo(e.target.value as U)}
@@ -67,14 +70,14 @@ export function UnitConverter<U extends string>({
           >
             {units.map((u) => (
               <option key={u} value={u}>
-                {labels[u]}
+                {unitLabels[u]}
               </option>
             ))}
           </select>
         </label>
       </div>
       <label>
-        <span className={ui.label}>Value</span>
+        <span className={ui.label}>{labels.value}</span>
         <input
           type="number"
           value={value}
@@ -83,9 +86,9 @@ export function UnitConverter<U extends string>({
         />
       </label>
       <label>
-        <span className={ui.label}>Result</span>
+        <span className={ui.label}>{labels.result}</span>
         <output className={`${ui.outputField} text-lg`}>
-          {result ? `${result} ${labels[to]}` : "-"}
+          {result ? `${result} ${unitLabels[to]}` : "-"}
         </output>
       </label>
     </div>

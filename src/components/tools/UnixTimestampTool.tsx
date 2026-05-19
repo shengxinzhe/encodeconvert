@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
+import type { Dictionary } from "@/i18n/types";
 import {
   dateToUnixMs,
   dateToUnixSeconds,
@@ -16,7 +17,15 @@ import { ui } from "@/lib/ui";
 type Mode = "toDate" | "toUnix";
 type Unit = "seconds" | "milliseconds";
 
-export function UnixTimestampTool() {
+export function UnixTimestampTool({
+  labels,
+  ui: tui,
+  errors,
+}: {
+  labels: Dictionary["common"];
+  ui: Dictionary["toolUi"]["unix"];
+  errors: Dictionary["errors"];
+}) {
   const [mode, setMode] = useState<Mode>("toDate");
   const [unit, setUnit] = useState<Unit>("seconds");
   const [zone, setZone] = useState<TimestampZone>("local");
@@ -27,7 +36,7 @@ export function UnixTimestampTool() {
     if (mode === "toDate") {
       const n = Number(unixInput);
       if (!unixInput || Number.isNaN(n))
-        return { text: "", error: "Enter a valid number" };
+        return { text: "", error: errors.invalidNumber };
       try {
         const text =
           unit === "seconds"
@@ -35,16 +44,16 @@ export function UnixTimestampTool() {
             : unixMsToDate(n, zone);
         return { text, error: undefined };
       } catch {
-        return { text: "", error: "Invalid timestamp" };
+        return { text: "", error: errors.invalidTimestamp };
       }
     }
     const ms =
       unit === "seconds"
         ? dateToUnixSeconds(dateInput, zone)
         : dateToUnixMs(dateInput, zone);
-    if (Number.isNaN(ms)) return { text: "", error: "Invalid date" };
+    if (Number.isNaN(ms)) return { text: "", error: errors.invalidDate };
     return { text: String(ms), error: undefined };
-  }, [mode, unit, zone, unixInput, dateInput]);
+  }, [mode, unit, zone, unixInput, dateInput, errors]);
 
   const useNow = useCallback(() => {
     if (mode === "toDate") {
@@ -61,36 +70,36 @@ export function UnixTimestampTool() {
       <div className="flex flex-wrap gap-2">
         <ToggleGroup
           options={[
-            { id: "toDate", label: "Unix → Date" },
-            { id: "toUnix", label: "Date → Unix" },
+            { id: "toDate", label: tui.toDate },
+            { id: "toUnix", label: tui.toUnix },
           ]}
           value={mode}
           onChange={setMode}
         />
         <ToggleGroup
           options={[
-            { id: "seconds", label: "Seconds" },
-            { id: "milliseconds", label: "Milliseconds" },
+            { id: "seconds", label: tui.seconds },
+            { id: "milliseconds", label: tui.milliseconds },
           ]}
           value={unit}
           onChange={setUnit}
         />
         <ToggleGroup
           options={[
-            { id: "local", label: "Local" },
-            { id: "utc", label: "UTC" },
+            { id: "local", label: tui.local },
+            { id: "utc", label: tui.utc },
           ]}
           value={zone}
           onChange={setZone}
         />
         <button type="button" onClick={useNow} className={ui.btnSecondary}>
-          Now
+          {labels.now}
         </button>
       </div>
 
       {mode === "toDate" ? (
         <label>
-          <span className={ui.label}>Unix timestamp</span>
+          <span className={ui.label}>{tui.unixLabel}</span>
           <input
             type="text"
             value={unixInput}
@@ -100,7 +109,7 @@ export function UnixTimestampTool() {
         </label>
       ) : (
         <label>
-          <span className={ui.label}>Date & time</span>
+          <span className={ui.label}>{tui.dateLabel}</span>
           <input
             type="datetime-local"
             value={dateInput}
@@ -111,7 +120,7 @@ export function UnixTimestampTool() {
       )}
 
       <label>
-        <span className={ui.label}>Result</span>
+        <span className={ui.label}>{labels.result}</span>
         <output className={ui.outputField}>
           {(output.error ?? output.text) || "-"}
         </output>

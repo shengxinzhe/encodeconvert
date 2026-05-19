@@ -2,12 +2,21 @@
 
 import { useMemo, useState } from "react";
 import { base64Decode, base64Encode } from "@/lib/encode";
+import type { Dictionary } from "@/i18n/types";
 import { DualPaneTool } from "../DualPaneTool";
 import { ModeToggle } from "../ModeToggle";
 
 type Mode = "encode" | "decode";
 
-export function Base64Tool() {
+export function Base64Tool({
+  labels,
+  ui,
+  errors,
+}: {
+  labels: Dictionary["common"];
+  ui: Dictionary["toolUi"]["base64"];
+  errors: Dictionary["errors"];
+}) {
   const [input, setInput] = useState("");
   const [mode, setMode] = useState<Mode>("encode");
 
@@ -18,12 +27,13 @@ export function Base64Tool() {
         mode === "encode" ? base64Encode(input) : base64Decode(input);
       return { output: out, error: undefined };
     } catch {
-      return { output: "", error: "Invalid Base64 input" };
+      return { output: "", error: errors.invalidBase64 };
     }
-  }, [input, mode]);
+  }, [input, mode, errors.invalidBase64]);
 
   return (
     <DualPaneTool
+      labels={labels}
       inputValue={input}
       onInputChange={setInput}
       output={output}
@@ -35,12 +45,14 @@ export function Base64Tool() {
           setMode((m) => (m === "encode" ? "decode" : "encode"));
         }
       }}
-      inputPlaceholder={mode === "encode" ? "Text to encode…" : "Base64 to decode…"}
+      inputPlaceholder={
+        mode === "encode" ? ui.placeholderEncode : ui.placeholderDecode
+      }
       extraControls={
         <ModeToggle
           modes={[
-            { id: "encode", label: "Encode" },
-            { id: "decode", label: "Decode" },
+            { id: "encode", label: ui.encode },
+            { id: "decode", label: ui.decode },
           ]}
           value={mode}
           onChange={setMode}

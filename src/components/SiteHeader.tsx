@@ -2,19 +2,36 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CATEGORIES, SITE } from "@/lib/site";
+import type { Locale } from "@/i18n/config";
+import { localePath, stripLocalePrefix } from "@/i18n/path";
+import type { Dictionary } from "@/i18n/types";
+import { CATEGORY_HREFS, SITE } from "@/lib/site";
+import { LocaleSwitcher } from "./LocaleSwitcher";
 import { ui } from "@/lib/ui";
 import { useTheme } from "./ThemeProvider";
 
-export function SiteHeader() {
+const NAV_KEYS = [
+  { id: "encode" as const, href: CATEGORY_HREFS.encode },
+  { id: "time" as const, href: CATEGORY_HREFS.time },
+  { id: "convert" as const, href: CATEGORY_HREFS.convert },
+];
+
+export function SiteHeader({
+  locale,
+  dict,
+}: {
+  locale: Locale;
+  dict: Dictionary;
+}) {
   const pathname = usePathname();
+  const basePath = stripLocalePrefix(pathname);
   const { theme, toggle } = useTheme();
 
   return (
     <header className="sticky top-0 z-50 border-b border-hairline bg-canvas/90 backdrop-blur-md">
       <div className={`${ui.page} flex h-16 items-center justify-between gap-4`}>
         <Link
-          href="/"
+          href={localePath(locale, "/")}
           className="flex items-center gap-2.5 font-semibold tracking-[-0.02em] text-ink"
         >
           <span className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-xs font-bold text-on-primary">
@@ -24,37 +41,37 @@ export function SiteHeader() {
         </Link>
 
         <nav className="flex items-center gap-0.5">
-          {CATEGORIES.map((cat) => {
+          {NAV_KEYS.map((cat) => {
             const active =
-              pathname === cat.href || pathname.startsWith(`${cat.href}/`);
+              basePath === cat.href || basePath.startsWith(`${cat.href}/`);
             return (
               <Link
                 key={cat.id}
-                href={cat.href}
+                href={localePath(locale, cat.href)}
                 className={active ? ui.btnNavActive : ui.btnGhost}
               >
-                {cat.id === "encode"
-                  ? "Encode"
-                  : cat.id === "time"
-                    ? "Time"
-                    : "Convert"}
+                {dict.nav[cat.id]}
               </Link>
             );
           })}
           <Link
-            href="/blog"
+            href={localePath(locale, "/blog")}
             className={
-              pathname.startsWith("/blog") ? ui.btnNavActive : ui.btnGhost
+              basePath.startsWith("/blog") ? ui.btnNavActive : ui.btnGhost
             }
           >
-            Blog
+            {dict.nav.blog}
           </Link>
+          <LocaleSwitcher
+            locale={locale}
+            labels={{ en: dict.nav.langEn, zh: dict.nav.langZh }}
+          />
           <button
             type="button"
             onClick={toggle}
-            className={`${ui.btnGhost} ml-1 !w-8 !px-0`}
+            className={`${ui.btnGhost} !w-8 !px-0`}
             aria-label={
-              theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+              theme === "dark" ? dict.nav.themeLight : dict.nav.themeDark
             }
           >
             {theme === "dark" ? <SunIcon /> : <MoonIcon />}
