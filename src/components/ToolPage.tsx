@@ -1,5 +1,6 @@
 import { AdPlaceholder } from "./AdPlaceholder";
 import { RelatedTools } from "./RelatedTools";
+import { ui } from "@/lib/ui";
 
 export function ToolPage({
   title,
@@ -13,16 +14,13 @@ export function ToolPage({
   children: React.ReactNode;
 }) {
   return (
-    <article className="mx-auto max-w-5xl px-4 py-10 sm:px-6">
-      <header className="mb-8">
-        <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-3xl">
-          {title}
-        </h1>
-        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-          {description}
-        </p>
+    <article className={`${ui.page} py-10 sm:py-14`}>
+      <header className="mb-8 max-w-2xl">
+        <p className={ui.captionMono}>Tool</p>
+        <h1 className={`${ui.displayLg} mt-2`}>{title}</h1>
+        <p className={`${ui.bodyMd} mt-3`}>{description}</p>
       </header>
-      {children}
+      <div className="tool-panel">{children}</div>
       <RelatedTools currentPath={path} />
       <AdPlaceholder />
     </article>

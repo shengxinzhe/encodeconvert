@@ -1,5 +1,7 @@
 "use client";
 
+import { ui } from "@/lib/ui";
+
 export function ModeToggle<T extends string>({
   modes,
   value,
@@ -10,16 +12,16 @@ export function ModeToggle<T extends string>({
   onChange: (v: T) => void;
 }) {
   return (
-    <div className="inline-flex rounded-lg border border-zinc-200 p-0.5 dark:border-zinc-700">
+    <div className="inline-flex rounded-full border border-hairline bg-canvas-soft-2 p-1">
       {modes.map((m) => (
         <button
           key={m.id}
           type="button"
           onClick={() => onChange(m.id)}
-          className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${
+          className={`rounded-full px-4 py-1.5 text-sm font-medium tracking-[-0.28px] transition ${
             value === m.id
-              ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
-              : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+              ? "bg-primary text-on-primary shadow-sm"
+              : "text-body hover:text-ink"
           }`}
         >
           {m.label}

@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { formatNumber } from "@/lib/convert";
+import { ui } from "@/lib/ui";
 
 export function UnitConverter<U extends string>({
   units,
@@ -28,18 +29,15 @@ export function UnitConverter<U extends string>({
     return formatNumber(convert(n, from, to));
   }, [value, from, to, convert]);
 
-  const selectClass =
-    "rounded-lg border border-zinc-200 bg-white px-2 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900";
-
   return (
-    <div className="max-w-lg space-y-4">
+    <div className="max-w-lg space-y-5">
       <div className="grid gap-3 sm:grid-cols-[1fr,auto,1fr] sm:items-end">
-        <label className="block">
-          <span className="text-xs font-medium uppercase text-zinc-500">From</span>
+        <label>
+          <span className={ui.label}>From</span>
           <select
             value={from}
             onChange={(e) => setFrom(e.target.value as U)}
-            className={`mt-1 w-full ${selectClass}`}
+            className={ui.select}
           >
             {units.map((u) => (
               <option key={u} value={u}>
@@ -55,17 +53,17 @@ export function UnitConverter<U extends string>({
             setTo(from);
             if (result) setValue(result);
           }}
-          className="rounded-lg border border-zinc-200 px-3 py-2 text-sm dark:border-zinc-700"
+          className={ui.btnSecondary}
           aria-label="Swap units"
         >
           ⇄
         </button>
-        <label className="block">
-          <span className="text-xs font-medium uppercase text-zinc-500">To</span>
+        <label>
+          <span className={ui.label}>To</span>
           <select
             value={to}
             onChange={(e) => setTo(e.target.value as U)}
-            className={`mt-1 w-full ${selectClass}`}
+            className={ui.select}
           >
             {units.map((u) => (
               <option key={u} value={u}>
@@ -75,19 +73,19 @@ export function UnitConverter<U extends string>({
           </select>
         </label>
       </div>
-      <label className="block">
-        <span className="text-xs font-medium uppercase text-zinc-500">Value</span>
+      <label>
+        <span className={ui.label}>Value</span>
         <input
           type="number"
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          className="mt-1 w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 font-mono text-sm dark:border-zinc-700 dark:bg-zinc-900"
+          className={ui.inputField}
         />
       </label>
-      <label className="block">
-        <span className="text-xs font-medium uppercase text-zinc-500">Result</span>
-        <output className="mt-1 block rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-3 font-mono text-lg dark:border-zinc-700 dark:bg-zinc-900/50">
-          {result ? `${result} ${labels[to]}` : "—"}
+      <label>
+        <span className={ui.label}>Result</span>
+        <output className={`${ui.outputField} text-lg`}>
+          {result ? `${result} ${labels[to]}` : "-"}
         </output>
       </label>
     </div>

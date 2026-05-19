@@ -11,6 +11,7 @@ import {
   unixMsToDate,
   unixSecondsToDate,
 } from "@/lib/time";
+import { ui } from "@/lib/ui";
 
 type Mode = "toDate" | "toUnix";
 type Unit = "seconds" | "milliseconds";
@@ -56,7 +57,7 @@ export function UnixTimestampTool() {
   }, [mode, unit]);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="flex flex-wrap gap-2">
         <ToggleGroup
           options={[
@@ -82,46 +83,36 @@ export function UnixTimestampTool() {
           value={zone}
           onChange={setZone}
         />
-        <button
-          type="button"
-          onClick={useNow}
-          className="rounded-lg border border-zinc-200 px-3 py-1.5 text-sm dark:border-zinc-700"
-        >
+        <button type="button" onClick={useNow} className={ui.btnSecondary}>
           Now
         </button>
       </div>
 
       {mode === "toDate" ? (
-        <label className="block">
-          <span className="text-xs font-medium uppercase text-zinc-500">
-            Unix timestamp
-          </span>
+        <label>
+          <span className={ui.label}>Unix timestamp</span>
           <input
             type="text"
             value={unixInput}
             onChange={(e) => setUnixInput(e.target.value)}
-            className="mt-1 w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 font-mono text-sm dark:border-zinc-700 dark:bg-zinc-900"
+            className={ui.inputField}
           />
         </label>
       ) : (
-        <label className="block">
-          <span className="text-xs font-medium uppercase text-zinc-500">
-            Date & time
-          </span>
+        <label>
+          <span className={ui.label}>Date & time</span>
           <input
             type="datetime-local"
             value={dateInput}
             onChange={(e) => setDateInput(e.target.value)}
-            className="mt-1 w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
+            className={ui.inputField}
           />
         </label>
       )}
 
-      <label className="block">
-        <span className="text-xs font-medium uppercase text-zinc-500">
-          Result
-        </span>
-        <output className="mt-1 block w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-3 font-mono text-sm dark:border-zinc-700 dark:bg-zinc-900/50">
+      <label>
+        <span className={ui.label}>Result</span>
+        <output className={ui.outputField}>
           {(output.error ?? output.text) || "-"}
         </output>
       </label>
@@ -139,17 +130,13 @@ function ToggleGroup<T extends string>({
   onChange: (v: T) => void;
 }) {
   return (
-    <div className="inline-flex rounded-lg border border-zinc-200 p-0.5 dark:border-zinc-700">
+    <div className={ui.toggleGroup}>
       {options.map((o) => (
         <button
           key={o.id}
           type="button"
           onClick={() => onChange(o.id)}
-          className={`rounded-md px-2.5 py-1 text-xs font-medium ${
-            value === o.id
-              ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
-              : "text-zinc-600 dark:text-zinc-400"
-          }`}
+          className={value === o.id ? ui.toggleActive : ui.toggleIdle}
         >
           {o.label}
         </button>

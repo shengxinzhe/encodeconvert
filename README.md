@@ -41,6 +41,10 @@ vercel --prod
 
 绑定自定义域名后，在 Vercel 项目 **Settings → Environment Variables** 中设置上述变量（Production）。
 
+## Design system
+
+UI follows [VoltAgent/awesome-design-md](https://github.com/VoltAgent/awesome-design-md) **Vercel** tokens (`design/design-md/vercel/DESIGN.md`), implemented in `src/app/globals.css` and `src/lib/ui.ts`.
+
 ## Project structure
 
 - `src/lib/site.ts` — tool registry & site config

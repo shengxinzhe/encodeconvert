@@ -1,26 +1,37 @@
 import Link from "next/link";
 import { CATEGORIES, SITE, TOOLS } from "@/lib/site";
+import { ui } from "@/lib/ui";
+
+const CATEGORY_ICONS: Record<string, string> = {
+  encode: "01",
+  time: "02",
+  convert: "03",
+};
 
 export default function HomePage() {
   const popular = TOOLS.slice(0, 6);
 
   return (
     <>
-      <section className="border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
-        <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-20">
-          <p className="text-sm font-medium text-zinc-500">{SITE.domain}</p>
-          <h1 className="mt-2 max-w-2xl text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-4xl">
-            {SITE.tagline}
-          </h1>
-          <p className="mt-4 max-w-xl text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-            {SITE.trustLine}
-          </p>
-          <div className="mt-8 flex flex-wrap gap-2">
+      <section className="hero-mesh border-b border-hairline">
+        <div className={`${ui.page} py-20 sm:py-28`}>
+          <p className={ui.captionMono}>{SITE.domain}</p>
+          <h1 className={`${ui.displayXl} mt-3 max-w-3xl`}>{SITE.tagline}</h1>
+          <p className={`${ui.bodyLg} mt-5 max-w-xl`}>{SITE.trustLine}</p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="/encode/base64" className={ui.btnPrimary}>
+              Try Base64 tool
+            </Link>
+            <Link href="/encode" className={ui.btnSecondary}>
+              Browse all tools
+            </Link>
+          </div>
+          <div className="mt-10 flex flex-wrap gap-2">
             {popular.map((tool) => (
               <Link
                 key={tool.path}
                 href={tool.path}
-                className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-sm text-zinc-800 transition hover:border-zinc-300 hover:bg-white dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-zinc-600"
+                className="rounded-full border border-hairline bg-canvas/80 px-3.5 py-1.5 text-sm tracking-[-0.28px] text-body backdrop-blur-sm transition hover:border-hairline-strong hover:text-ink"
               >
                 {tool.title}
               </Link>
@@ -29,22 +40,25 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-5xl px-4 py-14 sm:px-6">
-        <div className="grid gap-6 md:grid-cols-3">
+      <section className={`${ui.page} py-20`}>
+        <p className={ui.captionMono}>Categories</p>
+        <h2 className={`${ui.displayLg} mt-2`}>Everything you need in one place.</h2>
+        <div className="mt-10 grid gap-6 md:grid-cols-3">
           {CATEGORIES.map((cat) => (
             <Link
               key={cat.id}
               href={cat.href}
-              className="rounded-xl border border-zinc-200 bg-white p-6 transition hover:border-zinc-300 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
+              className={`${ui.cardLg} group block`}
             >
-              <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+              <span className="font-mono text-xs text-mute">
+                {CATEGORY_ICONS[cat.id]}
+              </span>
+              <h3 className="mt-3 text-xl font-semibold tracking-[-0.04em] text-ink">
                 {cat.title}
-              </h2>
-              <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-                {cat.description}
-              </p>
-              <span className="mt-4 inline-block text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                Browse tools
+              </h3>
+              <p className={`${ui.bodySm} mt-2`}>{cat.description}</p>
+              <span className="mt-5 inline-flex text-sm font-medium text-link group-hover:text-link-deep">
+                Open category →
               </span>
             </Link>
           ))}

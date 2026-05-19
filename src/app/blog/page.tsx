@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { buildMetadata } from "@/lib/metadata";
+import { ui } from "@/lib/ui";
 
 export const metadata = buildMetadata({
   title: "Blog",
@@ -25,32 +26,31 @@ const PLANNED = [
 
 export default function BlogPage() {
   return (
-    <article className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
-      <h1 className="text-2xl font-semibold tracking-tight">Blog</h1>
-      <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-        Tutorials and references for our tools. Articles marked “coming soon”
-        will be published for SEO and AdSense review.
+    <article className={`${ui.page} py-14`}>
+      <p className={ui.captionMono}>Blog</p>
+      <h1 className={`${ui.displayLg} mt-2`}>Guides & references</h1>
+      <p className={`${ui.bodyMd} mt-3 max-w-xl`}>
+        Tutorials for our tools. Articles marked &quot;coming soon&quot; will be
+        published for SEO and AdSense review.
       </p>
-      <ul className="mt-8 space-y-4">
+      <ul className="mt-10 space-y-3">
         {PLANNED.map((post) => (
-          <li
-            key={post.slug}
-            className="rounded-lg border border-zinc-200 px-4 py-3 dark:border-zinc-800"
-          >
-            <span className="font-medium text-zinc-900 dark:text-zinc-50">
-              {post.title}
-            </span>
-            <span className="ml-2 text-xs text-zinc-400">— coming soon</span>
+          <li key={post.slug} className={ui.card}>
+            <span className="font-medium text-ink">{post.title}</span>
+            <span className={`${ui.caption} ml-2`}>— coming soon</span>
           </li>
         ))}
       </ul>
-      <p className="mt-8 text-sm text-zinc-500">
+      <p className={`${ui.bodySm} mt-8`}>
         Meanwhile, try our{" "}
-        <Link href="/encode/base64" className="underline">
+        <Link href="/encode/base64" className="text-link hover:text-link-deep">
           Base64
         </Link>{" "}
         or{" "}
-        <Link href="/time/unix-timestamp" className="underline">
+        <Link
+          href="/time/unix-timestamp"
+          className="text-link hover:text-link-deep"
+        >
           Unix timestamp
         </Link>{" "}
         tools.
