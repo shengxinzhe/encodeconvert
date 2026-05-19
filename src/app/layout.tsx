@@ -1,5 +1,5 @@
-import { Geist, Geist_Mono } from "next/font/google";
-import { Noto_Sans_SC } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import { Geist, Geist_Mono, Noto_Sans_SC } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -28,7 +28,10 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} ${notoSansSc.variable} h-full`}
     >
-      <body className="flex min-h-full flex-col antialiased">{children}</body>
+      <body className="flex min-h-full flex-col antialiased">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
